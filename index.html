@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodnight Juju</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        
+        :root {
+            --moon-y-position: 40%; 
+            --button-size: 1; 
+            --button-color: #9B97B2; 
+            --button-glow: rgba(160, 148, 194, 0.4); 
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50, #0a1622);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .shooting-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .shooting-star {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.5), transparent);
+            border-radius: 50%;
+            animation: shooting 3s linear;
+            opacity: 0;
+            box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes shooting {
+            0% {
+                transform: translateX(0) translateY(0) rotate(215deg);
+                opacity: 1;
+                width: 0;
+            }
+            10% {
+                opacity: 1;
+                width: 50px;
+            }
+            70% {
+                width: 200px;
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(400px) translateY(400px) rotate(215deg);
+                opacity: 0;
+                width: 250px;
+            }
+        }
+
+        .clouds {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            z-index: 2;
+        }
+
+        .cloud {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            animation: float-clouds 20s infinite linear;
+        }
+
+        @keyframes float-clouds {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100vw);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+        }
+
+        .button {
+            padding: calc(18px * var(--button-size)) calc(36px * var(--button-size));
+            background: var(--button-color);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: calc(22px * var(--button-size));
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 0 25px var(--button-glow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .button.hide {
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 35px var(--button-glow);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        .moon-animation {
+            position: fixed;
+            top: var(--moon-y-position);
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 70% 70%, 
+                #fffce8, #e0d8c3, #c4c1a6, #aba692);
+            box-shadow: 0 0 50px 15px rgba(255, 252, 232, 0.6), 
+                        0 0 100px 25px rgba(255, 252, 232, 0.4);
+            z-index: 2;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='noise' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.1'/%3E%3CfeFuncG type='linear' slope='0.1'/%3E%3CfeFuncB type='linear' slope='0.1'/%3E%3C/feComponentTransfer%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0.3'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+                          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='noise2' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.1'/%3E%3CfeFuncG type='linear' slope='0.1'/%3E%3CfeFuncB type='linear' slope='0.1'/%3E%3C/feComponentTransfer%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0.15'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise2)'/%3E%3C/svg%3E");
+            background-blend-mode: soft-light, overlay;
+            cursor: pointer;
+        }
+        
+        .moon-animation.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: moon-rotate 120s infinite linear;
+        }
+        
+        @keyframes moon-rotate {
+            from {
+                background-position: 0% 0%, 0% 0%;
+            }
+            to {
+                background-position: 100% 100%, 100% 100%;
+            }
+        }
+
+        .crater {
+            position: absolute;
+            background-color: rgba(80, 80, 80, 0.15);
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mare {
+            position: absolute;
+            background-color: rgba(70, 70, 70, 0.1);
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+        
+        .moon-glow {
+            position: fixed; 
+            top: var(--moon-y-position);
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 252, 232, 0.4), rgba(255, 252, 232, 0) 70%);
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .moon-glow.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.8);
+            animation: glow-pulse 4s infinite alternate ease-in-out;
+        }
+        
+        @keyframes glow-pulse {
+            0% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(1.8);
+                filter: blur(15px);
+            }
+            100% {
+                opacity: 0.7;
+                transform: translate(-50%, -50%) scale(2.2);
+                filter: blur(20px);
+            }
+        }
+        
+        .stars-around-moon {
+            position: fixed;
+            top: var(--moon-y-position);
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 1;
+        }
+        
+        .stars-around-moon.show {
+            opacity: 1;
+        }
+        
+        .star-around-moon {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: star-twinkle 2s infinite ease-in-out;
+        }
+        
+        @keyframes star-twinkle {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        .message-container {
+            margin-top: 40px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.5s ease;
+        }
+
+        .message-container.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .message {
+            font-size: 32px;
+            font-weight: 700;
+            color: #6554af;
+            text-shadow: 2px 2px 5px rgba(101, 84, 175, 0.2);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #6554af, #d789d7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pop 0.5s ease-out;
+        }
+
+        .sub-message {
+            font-size: 20px;
+            color: #b4a5ff;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(10px);
+            }
+        }
+
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff8fab;
+            animation: float-heart 4s ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes float-heart {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .cosmic-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particle-float 10s infinite linear;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--translate-x), var(--translate-y)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="shooting-stars"></div>
+    <div class="clouds"></div>
+    <div class="hearts"></div>
+    <div class="cosmic-particles"></div>
+    
+   
+    <div class="moon-animation">
+       
+        <div class="mare" style="width: 120px; height: 100px; top: 50px; left: 30px; border-radius: 40%;"></div>
+        <div class="mare" style="width: 80px; height: 90px; top: 150px; left: 80px; border-radius: 45%;"></div>
+        <div class="mare" style="width: 100px; height: 70px; top: 100px; left: 140px; border-radius: 50%;"></div>
+        
+      
+        <div class="crater" style="width: 40px; height: 40px; top: 40px; left: 30px;"></div>
+        <div class="crater" style="width: 25px; height: 25px; top: 90px; left: 70px;"></div>
+        <div class="crater" style="width: 35px; height: 35px; top: 50px; left: 150px;"></div>
+        <div class="crater" style="width: 30px; height: 30px; top: 160px; left: 30px;"></div>
+        <div class="crater" style="width: 20px; height: 20px; top: 100px; left: 120px;"></div>
+        <div class="crater" style="width: 15px; height: 15px; top: 180px; left: 140px;"></div>
+        <div class="crater" style="width: 18px; height: 18px; top: 210px; left: 80px;"></div>
+        <div class="crater" style="width: 22px; height: 22px; top: 70px; left: 210px;"></div>
+        <div class="crater" style="width: 28px; height: 28px; top: 140px; left: 190px;"></div>
+    </div>
+    <div class="moon-glow"></div>
+    <div class="stars-around-moon"></div>
+
+    <div class="container">
+        <button class="button">
+            <i class="fas fa-moon"></i> Play Me
+        </button>
+        <div class="message-container">
+            <div class="message">Goodnight Juju, sleep well!</div>
+            <div class="sub-message">Wishing you a peaceful day today, sweet dreams!</div>
+        </div>
+    </div>
+
+    <script>
+    
+        function createStars() {
+            const stars = document.querySelector('.stars');
+            const starsCount = 100;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+               
+                const size = Math.random() * 2 + 2;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+             
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                star.style.left = `${posX}%`;
+                star.style.top = `${posY}%`;
+                
+            
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                
+                stars.appendChild(star);
+            }
+        }
+        
+     
+        function createStarsAroundMoon() {
+            const starsContainer = document.querySelector('.stars-around-moon');
+            const starsCount = 30;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star-around-moon');
+                
+       
+                const size = Math.random() * 3 + 2;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+           
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 180 + 80;
+                const posX = Math.cos(angle) * distance + 200;
+                const posY = Math.sin(angle) * distance + 200;
+                star.style.left = `${posX}px`;
+                star.style.top = `${posY}px`;
+                
+       
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+      
+        function createSingleShootingStar(container) {
+            const shootingStar = document.createElement('div');
+            shootingStar.classList.add('shooting-star');
+            
+    
+            const posX = Math.random() * 80;
+            const posY = Math.random() * 40;
+            shootingStar.style.left = `${posX}%`;
+            shootingStar.style.top = `${posY}%`;
+            
+       
+            const width = Math.random() * 80 + 80;
+            shootingStar.style.width = `${width}px`;
+            
+            container.appendChild(shootingStar);
+            
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 3000);
+        }
+        
+       
+        function createShootingStars() {
+            const shootingStarsContainer = document.querySelector('.shooting-stars');
+            
+         
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createSingleShootingStar(shootingStarsContainer);
+                }, i * 1500);
+            }
+            
+            setInterval(() => {
+               
+                const count = Math.floor(Math.random() * 2) + 2;
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        createSingleShootingStar(shootingStarsContainer);
+                    }, i * 800);
+                }
+            }, 4000);
+        }
+
+     
+        function createClouds() {
+            const cloudsContainer = document.querySelector('.clouds');
+            const cloudsCount = 5;
+            
+            for (let i = 0; i < cloudsCount; i++) {
+                const cloud = document.createElement('div');
+                cloud.classList.add('cloud');
+                
+              
+                const width = Math.random() * 200 + 100;
+                const height = Math.random() * 50 + 30;
+                cloud.style.width = `${width}px`;
+                cloud.style.height = `${height}px`;
+                
+             
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                cloud.style.left = `${posX}%`;
+                cloud.style.bottom = `${posY}%`;
+                
+      
+                const duration = Math.random() * 30 + 30;
+                cloud.style.animationDuration = `${duration}s`;
+             
+                const delay = Math.random() * 15;
+                cloud.style.animationDelay = `${delay}s`;
+                
+                cloudsContainer.appendChild(cloud);
+            }
+        }
+
+    
+        function createSingleHeart() {
+            const heartsContainer = document.querySelector('.hearts');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '<i class="fas fa-heart"></i>';
+            
+          
+            const posX = Math.random() * 100;
+            heart.style.left = `${posX}%`;
+            heart.style.bottom = '0';
+            
+        
+            const duration = Math.random() * 2 + 3;
+            heart.style.animationDuration = `${duration}s`;
+            
+            heartsContainer.appendChild(heart);
+            
+         
+            setTimeout(() => {
+                heart.remove();
+            }, 4000);
+        }
+
+      
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createSingleHeart();
+                }, i * 200);
+            }
+        }
+        
+     
+        function createCosmicParticles() {
+            const particlesContainer = document.querySelector('.cosmic-particles');
+            const particlesCount = 30;
+            
+            for (let i = 0; i < particlesCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+          
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                
+             
+                const size = Math.random() * 2 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+             
+                const duration = Math.random() * 8 + 7;
+                particle.style.animationDuration = `${duration}s`;
+                
+               
+                const translateX = (Math.random() - 0.5) * 200;
+                const translateY = (Math.random() - 0.5) * 200;
+                particle.style.setProperty('--translate-x', `${translateX}px`);
+                particle.style.setProperty('--translate-y', `${translateY}px`);
+                
+          
+                const delay = Math.random() * 5;
+                particle.style.animationDelay = `${delay}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+       
+        function animateMoon() {
+            const moon = document.querySelector('.moon-animation');
+            const moonGlow = document.querySelector('.moon-glow');
+            const starsAroundMoon = document.querySelector('.stars-around-moon');
+            
+           
+            moon.animate([
+                { transform: 'translate(-50%, 100%) scale(0.2)', opacity: 0 },
+                { transform: 'translate(-50%, -50%) scale(0.8)', opacity: 1 }
+            ], {
+                duration: 2000,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+            
+          
+            moon.classList.add('show');
+            
+           
+            setTimeout(() => {
+                moonGlow.classList.add('show');
+            }, 500);
+            
+       
+            setTimeout(() => {
+                starsAroundMoon.classList.add('show');
+            }, 1000);
+            
+           
+            let clickCooldown = false;
+            
+            moon.addEventListener('click', function() {
+                if (clickCooldown) return;
+                
+             
+                clickCooldown = true;
+                setTimeout(() => { clickCooldown = false; }, 100);
+                
+               
+                const starsCount = Math.floor(Math.random() * 3) + 3;
+                for (let i = 0; i < starsCount; i++) {
+                    setTimeout(() => {
+                        createSingleShootingStar(document.querySelector('.shooting-stars'));
+                    }, i * 100);
+                }
+                
+          
+                const heartsCount = Math.floor(Math.random() * 3) + 3;
+                for (let i = 0; i < heartsCount; i++) {
+                    setTimeout(() => {
+                        createSingleHeart();
+                    }, i * 100);
+                }
+                
+              
+                this.animate([
+                    { transform: 'translate(-50%, -50%) scale(0.8)' },
+                    { transform: 'translate(-50%, -50%) scale(0.88)' },
+                    { transform: 'translate(-50%, -50%) scale(0.8)' }
+                ], {
+                    duration: 300,
+                    easing: 'cubic-bezier(0.28, 0.84, 0.42, 1)'
+                });
+                
+         
+                moonGlow.animate([
+                    { transform: 'translate(-50%, -50%) scale(1.8)' },
+                    { transform: 'translate(-50%, -50%) scale(1.9)' },
+                    { transform: 'translate(-50%, -50%) scale(1.8)' }
+                ], {
+                    duration: 300,
+                    easing: 'cubic-bezier(0.28, 0.84, 0.42, 1)'
+                });
+            });
+        }
+
+     
+        function setupButton() {
+            const button = document.querySelector('.button');
+            const messageContainer = document.querySelector('.message-container');
+            
+            button.addEventListener('click', () => {
+               
+                button.classList.add('hide');
+                
+            
+                messageContainer.classList.add('show');
+                
+              
+                createHearts();
+                
+               
+                animateMoon();
+            });
+        }
+
+      
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createStarsAroundMoon();
+            createShootingStars();
+            createClouds();
+            createCosmicParticles();
+            setupButton();
+        });
+    </script>
+</body>
+</html>
